@@ -1,0 +1,183 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.Message>
+
+@{
+    ViewData["Title"] = "الرسائل";
+    var contacts = ViewBag.Contacts as List<LivestockMarketplaceApp.Models.User>;
+    int currentUserId = ViewBag.CurrentUserId;
+}
+
+<div class="container mt-4" dir="rtl" style="text-align: right;">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden" style="height: 75vh;">
+        <div class="row g-0 h-100">
+
+            <div class="col-md-4 bg-light border-end h-100 d-flex flex-column">
+                <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-chat-dots text-primary me-2"></i> رسائلي</h5>
+                </div>
+
+                <div class="overflow-auto flex-grow-1 contact-list">
+                    @if (contacts != null && contacts.Any())
+                    {
+                        foreach (var contact in contacts)
+                        {
+                            // التحقق مما إذا كانت هذه المحادثة هي المفتوحة حالياً
+                            bool isActive = ViewBag.ActiveReceiverId != null && ViewBag.ActiveReceiverId == contact.Id;
+
+                            <a asp-action="Index" asp-route-receiverId="@contact.Id" class="text-decoration-none text-dark">
+                                <div class="d-flex align-items-center p-3 border-bottom @(isActive ? "active-contact" : "hover-contact")">
+                                    <div class="position-relative">
+                                        <i class="bi bi-person-circle text-secondary" style="font-size: 3rem;"></i>
+                                        @if (isActive)
+                                        {
+                                            <span class="position-absolute bottom-0 start-0 p-1 bg-success border border-light rounded-circle"></span>
+                                        }
+                                    </div>
+                                    <div class="ms-3 flex-grow-1">
+                                        <h6 class="fw-bold mb-0">@contact.FullName</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center p-4 text-muted mt-5">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mt-2">لا توجد محادثات سابقة</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-8 h-100 d-flex flex-column bg-white">
+
+                @if (ViewBag.ActiveReceiverId != null)
+                {
+                    <div class="p-3 border-bottom d-flex align-items-center bg-white shadow-sm z-1">
+                        <i class="bi bi-person-circle text-primary" style="font-size: 2.5rem;"></i>
+                        <div class="ms-3">
+                            <h6 class="fw-bold mb-0">@ViewBag.ReceiverName</h6>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 overflow-auto p-4 chat-bg" id="chatContainer">
+
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var msg in Model)
+                            {
+                                bool isMyMessage = msg.SenderId == currentUserId;
+
+                                if (isMyMessage)
+                                {
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <div class="message-out p-3 rounded-4 shadow-sm text-white">
+                                            <p class="mb-1">@msg.Content</p>
+                                            <small class="text-white-50 d-block text-start" style="font-size: 0.75rem;">@msg.SentAt.ToString("hh:mm tt") <i class="bi bi-check2-all text-info"></i></small>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex mb-3">
+                                        <div class="message-in p-3 rounded-4 shadow-sm">
+                                            <p class="mb-1">@msg.Content</p>
+                                            <small class="text-muted d-block text-start" style="font-size: 0.75rem;">@msg.SentAt.ToString("hh:mm tt")</small>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted mt-5">
+                                <span class="bg-light px-3 py-1 rounded-pill small">هذه بداية المحادثة مع @ViewBag.ReceiverName</span>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="p-3 border-top bg-light">
+                        <form asp-action="SendMessage" method="post">
+                            <input type="hidden" name="receiverId" value="@ViewBag.ActiveReceiverId" />
+                            <input type="hidden" name="listingId" value="@ViewBag.ActiveListingId" />
+
+                            <div class="input-group align-items-center">
+                                <input type="text" name="content" class="form-control rounded-pill py-2 px-4 shadow-sm border-0" placeholder="اكتب رسالتك هنا..." required autocomplete="off" autofocus>
+                                <button type="submit" class="btn btn-primary rounded-circle ms-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-send-fill text-white ms-1"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center chat-bg text-muted">
+                        <i class="bi bi-chat-right-text" style="font-size: 6rem; color: #cbd5e1;"></i>
+                        <h4 class="mt-3">اختر محادثة للبدء</h4>
+                        <p>تواصل مع البائعين والمشترين بسهولة وبسرية تامة.</p>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-bg {
+        background-color: #f0f2f5;
+        background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    }
+
+    .message-in {
+        background-color: #ffffff;
+        max-width: 75%;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .message-out {
+        background-color: #198754;
+        max-width: 75%;
+        border-bottom-left-radius: 0 !important;
+    }
+
+    .hover-contact:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .active-contact {
+        background-color: #e9ecef;
+        border-right: 4px solid #198754;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var chatContainer = document.getElementById("chatContainer");
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        });
+    </script>
+}

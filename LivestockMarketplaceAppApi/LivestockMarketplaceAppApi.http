@@ -1,0 +1,6 @@
+@LivestockMarketplaceAppApi_HostAddress = http://localhost:5230
+
+GET {{LivestockMarketplaceAppApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

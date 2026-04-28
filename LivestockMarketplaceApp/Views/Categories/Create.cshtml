@@ -1,0 +1,147 @@
+﻿@model LivestockMarketplaceApp.Models.Category
+
+@{
+    ViewData["Title"] = "إضافة قسم جديد";
+}
+
+<div class="container mt-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4 bg-white">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="text-center mb-5 border-bottom pb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle mb-3" style="width: 70px; height: 70px;">
+                            <i class="bi bi-plus-circle text-success fs-1"></i>
+                        </div>
+                        <h2 class="fw-bolder text-dark mb-1">إضافة قسم جديد</h2>
+                        <p class="text-muted small mb-0">أضف قسماً جديداً لتصنيف إعلانات المواشي بسهولة.</p>
+                    </div>
+
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-group mb-4 text-end position-relative">
+                            <label class="form-label fw-bold text-dark mb-2">اسم القسم <span class="text-danger">*</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-tag input-icon text-muted"></i>
+                                <input asp-for="Name" class="form-control premium-input rtl-input" placeholder="مثال: أغنام، إبل، أبقار..." required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="form-group mb-5 text-end position-relative">
+                            <label class="form-label fw-bold text-dark mb-2">رابط الأيقونة <span class="text-muted fw-normal small">(اختياري)</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-link-45deg input-icon text-muted" style="font-size: 24px;"></i>
+                                <input asp-for="IconUrl" class="form-control premium-input ltr-input" placeholder="https://example.com/icon.png" />
+                            </div>
+                            <div class="form-text text-muted small mt-2">
+                                <i class="bi bi-info-circle me-1"></i> ضع رابطاً مباشراً لصورة الأيقونة، أو اتركه فارغاً لاستخدام الأيقونة الافتراضية.
+                            </div>
+                            <span asp-validation-for="IconUrl" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <button type="submit" class="btn btn-login-premium rounded-pill fw-bold px-4 py-2">
+                                <i class="bi bi-save me-2"></i> حفظ القسم
+                            </button>
+
+                            <a asp-action="Index" class="btn btn-light rounded-pill fw-bold px-4 py-2 text-secondary" style="border: 2px solid #e2e8f0;">
+                                <i class="bi bi-arrow-right me-2"></i> العودة للقائمة
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .input-group-custom {
+        position: relative;
+    }
+
+    /* الأيقونات داخل الحقول (على اليمين في RTL) */
+    .input-icon {
+        position: absolute;
+        right: 18px !important;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        z-index: 10;
+        color: #94a3b8;
+        transition: color 0.3s ease;
+    }
+
+    /* تصميم الحقل المميز */
+    .premium-input {
+        border-radius: 50px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        padding-left: 20px !important;
+        padding-right: 50px !important; /* مساحة للأيقونة على اليمين */
+        border: 2px solid #e2e8f0;
+        background-color: #f8fafc;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    /* محاذاة النص العربي */
+    .rtl-input {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
+    /* محاذاة الروابط والإنجليزي */
+    .ltr-input {
+        text-align: left !important;
+        direction: ltr !important;
+    }
+
+        .ltr-input::placeholder {
+            text-align: right !important; /* الـ Placeholder يظل يمين عشان الشرح */
+        }
+
+    .premium-input:focus {
+        border-color: #D4AF37;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+        color: #1e293b;
+        outline: none;
+    }
+
+        .premium-input:focus + .input-icon {
+            color: #D4AF37 !important;
+        }
+
+    /* الزر الذهبي النابض */
+    .btn-login-premium {
+        background: linear-gradient(135deg, #D4AF37, #f1c40f);
+        color: white !important;
+        border: none;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .btn-login-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #f1c40f, #D4AF37);
+        }
+
+    .btn-light:hover {
+        background-color: #e2e8f0;
+        color: #1e293b !important;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

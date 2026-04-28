@@ -1,0 +1,251 @@
+﻿@model LivestockMarketplaceApp.Models.Listing
+
+@{
+    ViewData["Title"] = "تفاصيل الإعلان";
+}
+
+<div class="container mt-4 mb-5" dir="rtl" style="text-align: right;">
+
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div id="listingCarousel" class="carousel slide shadow-sm rounded-4 overflow-hidden bg-white" data-bs-ride="carousel" style="border: 1px solid #f1f5f9;">
+                <div class="carousel-inner">
+                    @if (Model.ListingImages != null && Model.ListingImages.Any())
+                    {
+                        var first = true;
+                        foreach (var img in Model.ListingImages)
+                        {
+                            // منطق دمج رابط الـ API
+                            string apiBaseUrl = "https://localhost:7229";
+                            var imageUrlFromDb = img.ImageUrl;
+                            var finalImageUrl = "/images/no-image.png";
+
+                            if (!string.IsNullOrEmpty(imageUrlFromDb))
+                            {
+                                if (imageUrlFromDb.StartsWith("http"))
+                                {
+                                    finalImageUrl = imageUrlFromDb;
+                                }
+                                else
+                                {
+                                    if (!imageUrlFromDb.StartsWith("/"))
+                                    {
+                                        imageUrlFromDb = "/" + imageUrlFromDb;
+                                    }
+                                    finalImageUrl = apiBaseUrl + imageUrlFromDb;
+                                }
+                            }
+
+                            <div class="carousel-item @(first ? "active" : "")">
+                                <img src="@finalImageUrl" class="d-block w-100" style="height: 500px; object-fit: contain; background-color: #f8fafc;" alt="صورة الحلال">
+                            </div>
+                            first = false;
+                        }
+                    }
+                    else
+                    {
+                        <div class="carousel-item active">
+                            <img src="/images/no-image.png" class="d-block w-100" style="height: 500px; object-fit: cover;" alt="لا توجد صورة">
+                        </div>
+                    }
+                </div>
+                @if (Model.ListingImages?.Count > 1)
+                {
+                    <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="opacity: 0.5;"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="opacity: 0.5;"></span>
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-4 bg-white d-flex flex-column">
+
+                <div class="mb-3">
+                    <h1 class="h2 fw-bolder text-dark mb-2">@Model.Title</h1>
+                    <h2 class="text-success fw-bold mb-3">@Model.Price.ToString("N0") <span class="fs-5 text-muted fw-normal">ريال</span></h2>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6 rounded-pill fw-normal">
+                        <i class="bi bi-tag text-primary me-1"></i> @Model.Category?.Name
+                    </span>
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6 rounded-pill fw-normal">
+                        <i class="bi bi-geo-alt text-danger me-1"></i> @Model.City
+                    </span>
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6 rounded-pill fw-normal">
+                        <i class="bi bi-calendar-event text-success me-1"></i> العمر: @Model.Age
+                    </span>
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6 rounded-pill fw-normal">
+                        <i class="bi bi-clock text-secondary me-1"></i> @Model.CreatedAt.ToString("yyyy/MM/dd")
+                    </span>
+                </div>
+
+                <div class="bg-light p-3 rounded-4 mb-4 border" style="border-color: #e2e8f0 !important;">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-card-text me-1 text-muted"></i> تفاصيل الإعلان:</h6>
+                    <p class="mb-0 text-secondary" style="line-height: 1.8; white-space: pre-wrap;">@Model.Description</p>
+                </div>
+
+                <div class="d-grid gap-3 mb-4 mt-auto">
+
+                    @if (User.Identity.IsAuthenticated && ViewBag.CurrentUserId != Model.UserId.ToString())
+                    {
+                        <button type="button" class="btn btn-premium-action btn-lg w-100 rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#purchaseModal">
+                            <i class="bi bi-cart3 me-2 fs-5"></i> طلب شراء الحلال
+                        </button>
+                    }
+
+                    <form asp-controller="Favorites" asp-action="ToggleFavorite" method="post" class="m-0">
+                        <input type="hidden" name="listingId" value="@Model.Id" />
+
+                        @if (ViewBag.IsFavorite == true)
+                        {
+                            <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow-sm" style="background-color: #ef4444; border-color: #ef4444;">
+                                <i class="bi bi-heart-fill me-1"></i> إزالة من المفضلة
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-light btn-lg w-100 rounded-pill fw-bold border" style="color: #64748b; background-color: #f8fafc;">
+                                <i class="bi bi-heart me-1"></i> إضافة إلى المفضلة
+                            </button>
+                        }
+                    </form>
+                </div>
+
+                <hr class="mb-4 mt-0" style="opacity: 0.1;" />
+
+                <div class="d-flex align-items-center justify-content-between bg-white border p-3 rounded-4 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 ms-3" style="width: 50px; height: 50px;">
+                            <i class="bi bi-person-fill fs-3"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1 text-dark">@(Model.User?.FullName ?? "بائع غير معروف")</h6>
+                            <p class="text-muted small mb-0"><i class="bi bi-geo-alt"></i> @(Model.User?.City ?? "غير محدد")</p>
+                        </div>
+                    </div>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (ViewBag.CurrentUserId != Model.UserId.ToString())
+                        {
+                            <a asp-controller="Messages" asp-action="Index" asp-route-receiverId="@Model.UserId" asp-route-listingId="@Model.Id" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm">
+                                <i class="bi bi-chat-dots me-1"></i> مراسلة
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary px-3 py-2 rounded-pill">إعلانك</span>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-controller="Settings" asp-action="Login" class="btn btn-outline-primary rounded-pill px-3 fw-bold small">
+                            تسجيل الدخول للمراسلة
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg" dir="rtl">
+
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bolder text-dark" id="purchaseModalLabel">
+                    <div class="bg-warning bg-opacity-10 text-warning d-inline-flex rounded-circle p-2 me-2">
+                        <i class="bi bi-cart-check fs-4"></i>
+                    </div>
+                    تأكيد طلب الشراء
+                </h5>
+                <button type="button" class="btn-close m-0" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+            </div>
+
+            <form asp-controller="Transport" asp-action="RequestTransport" method="post">
+                <div class="modal-body text-start pt-4">
+                    <input type="hidden" name="listingId" value="@Model.Id" />
+                    <input type="hidden" name="fee" value="0" /> <div class="form-group text-end position-relative mb-4">
+                        <label class="form-label fw-bold text-dark mb-2">عنوان الاستلام / التوصيل <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-geo-alt input-icon text-muted"></i>
+                            <input type="text" name="address" class="form-control premium-input rtl-input" required placeholder="مثال: الرياض - حي الملقا" />
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success rounded-3 small text-end mb-0 d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                        <span>سيتم إرسال طلب الشراء مباشرة للبائع. ستتمكن من متابعة حالة الطلب من قسم "طلباتي ومشترياتي".</span>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-top-0 pt-0 justify-content-start gap-2">
+                    <button type="submit" class="btn btn-premium-action px-4 py-2 rounded-pill fw-bold">تأكيد الطلب الآن</button>
+                    <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-bold border" data-bs-dismiss="modal">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* زر الإجراء الرئيسي (ذهبي متدرج) */
+    .btn-premium-action {
+        background: linear-gradient(135deg, #D4AF37, #f1c40f);
+        color: white !important;
+        border: none;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .btn-premium-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #f1c40f, #D4AF37);
+        }
+
+    /* تصميم حقول الـ Modal لتطابق الهوية */
+    .input-group-custom {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 16px !important; /* الأيقونة يسار */
+        right: auto !important;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        z-index: 4;
+        color: #94a3b8;
+    }
+
+    .premium-input {
+        border-radius: 12px !important;
+        padding: 12px 20px 12px 48px !important; /* مساحة للأيقونة باليسار */
+        border: 2px solid #e2e8f0;
+        background-color: #f8fafc;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #334155;
+    }
+
+    .rtl-input {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
+    .premium-input:focus {
+        border-color: #D4AF37;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+        outline: none;
+    }
+</style>

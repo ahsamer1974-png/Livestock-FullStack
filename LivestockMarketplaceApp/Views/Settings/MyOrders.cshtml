@@ -1,0 +1,39 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.Order>
+
+@{
+    ViewData["Title"] = "طلباتي";
+}
+
+<div class="container mt-4" dir="rtl" style="text-align: right;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold"><i class="bi bi-cart-check text-success me-2"></i> طلباتي ومشترياتي</h3>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">العودة للإعدادات</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-light text-center p-5 shadow-sm rounded-4">
+            <i class="bi bi-bag-x text-muted" style="font-size: 4rem;"></i>
+            <h5 class="mt-3 text-muted">لا توجد لديك أي طلبات سابقة</h5>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3 px-4 rounded-pill">تصفح الإعلانات</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-success">@order.Status</span>
+                            <small class="text-muted">@order.OrderDate.ToString("yyyy/MM/dd")</small>
+                        </div>
+                        <h5 class="fw-bold mb-1">@(order.Listing?.Title ?? "إعلان غير متوفر")</h5>
+                        <p class="text-primary fw-bold mb-0">@(order.Listing?.Price.ToString("C") ?? "---")</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

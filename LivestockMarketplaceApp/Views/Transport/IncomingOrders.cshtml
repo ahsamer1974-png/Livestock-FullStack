@@ -1,0 +1,47 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.TransportRequest>
+@{
+    ViewData["Title"] = "الطلبات الواردة";
+}
+
+<div class="container mt-5" dir="rtl" style="text-align: right;">
+    <h2 class="fw-bold mb-4"><i class="bi bi-inbox text-warning"></i> الطلبات الواردة لإعلاناتك</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">لا توجد طلبات شراء واردة حالياً.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <h5 class="fw-bold">طلب شراء: @order.Listing.Title</h5>
+                            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> عنوان المشتري: @order.DeliveryAddress</p>
+                            <p class="mb-3 text-muted"><i class="bi bi-clock"></i> التاريخ: @order.CreatedAt.ToString("yyyy/MM/dd")</p>
+
+                            <hr />
+                            @if (order.Status == 0)
+                            {
+                                <form asp-controller="Transport" asp-action="StartDelivery" method="post">
+                                    <input type="hidden" name="id" value="@order.Id" />
+                                    <button type="submit" class="btn btn-warning w-100 fw-bold rounded-pill">
+                                        <i class="bi bi-box-seam"></i> موافقة وتسليم لشركة التوصيل
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success m-0 p-2 text-center rounded-pill">
+                                    <i class="bi bi-robot"></i> النظام يقوم بتحديث حالة التوصيل تلقائياً للمشتري
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

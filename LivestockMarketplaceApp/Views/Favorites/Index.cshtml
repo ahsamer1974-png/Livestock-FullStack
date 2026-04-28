@@ -1,0 +1,79 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.Favorite>
+
+@{
+    ViewData["Title"] = "مفضلتي - سوق الحلال";
+}
+
+<div class="container mt-4" dir="rtl" style="text-align: right;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="bi bi-heart-fill text-danger"></i> إعلاناتي المفضلة</h2>
+        <span class="badge bg-gold p-2 text-dark" style="background-color: #D4AF37;">
+            عدد العناصر: @Model.Count()
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 shadow-sm bg-white rounded-3 border">
+            <div class="mb-3">
+                <i class="bi bi-heartbreak text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h4 class="text-secondary">قائمة المفضلة فارغة حالياً</h4>
+            <p class="text-muted">تصفح الإعلانات وأضف ما يعجبك بضغط زر القلب الذهبي.</p>
+            <a asp-controller="Listings" asp-action="Index" class="btn btn-primary mt-3 px-4 rounded-pill">
+                اكتشف الحلال الآن
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var fav in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden position-relative">
+                        <form asp-action="Remove" asp-route-id="@fav.Id" method="post" class="position-absolute top-0 start-0 m-2">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-sm text-danger" title="إزالة من المفضلة">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </form>
+
+                        @{
+                            // جلب أول صورة من صور الإعلان المرتبط
+                            var imageUrl = fav.Listing?.ListingImages?.FirstOrDefault()?.ImageUrl ?? "/images/no-image.png";
+                        }
+
+                        <img src="@imageUrl" class="card-img-top" style="height: 180px; object-fit: cover;" alt="@fav.Listing?.Title">
+
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold text-dark text-truncate">@fav.Listing?.Title</h6>
+                            <p class="text-success fw-bold mb-3">@fav.Listing?.Price.ToString("N0") ريال</p>
+
+                            <div class="d-grid gap-2">
+                                <a asp-controller="Listings" asp-action="Details" asp-route-id="@fav.ListingId" class="btn btn-outline-primary btn-sm rounded-pill">
+                                    <i class="bi bi-eye"></i> عرض التفاصيل
+                                </a>
+                                @* <a href="https://wa.me/@fav.Listing?.PhoneNumber" target="_blank" class="btn btn-success btn-sm rounded-pill">
+                                    <i class="bi bi-whatsapp"></i> تواصل
+                                </a> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    /* تحسين شكل الكروت عند مرور الماوس */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+</style>

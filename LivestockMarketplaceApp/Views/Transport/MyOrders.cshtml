@@ -1,0 +1,51 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.TransportRequest>
+@{
+    ViewData["Title"] = "مشترياتي";
+}
+
+<div class="container mt-5" dir="rtl" style="text-align: right;">
+    <h2 class="fw-bold mb-4"><i class="bi bi-bag-check text-warning"></i> طلباتي ومشترياتي</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">لم تقم بأي طلبات شراء حتى الآن.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var order in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <h5 class="fw-bold">@order.Listing.Title</h5>
+                            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> العنوان: @order.DeliveryAddress</p>
+                            <p class="mb-3 text-muted"><i class="bi bi-clock"></i> التاريخ: @order.CreatedAt.ToString("yyyy/MM/dd")</p>
+
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">حالة الطلب:</span>
+                                @if (order.Status == 0)
+                                {
+                                    <span class="badge bg-secondary p-2">⏳ قيد مراجعة البائع</span>
+                                }
+                                else if (order.Status == 1)
+                                {
+                                    <span class="badge bg-info text-dark p-2" style="background-color: #e0f7fa;">🏢 عند شركة التوصيل</span>
+                                }
+                                else if (order.Status == 2)
+                                {
+                                    <span class="badge bg-primary p-2">🚚 في الطريق إليك</span>
+                                }
+                                else if (order.Status == 3)
+                                {
+                                    <span class="badge bg-success p-2">✅ تم التسليم</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,168 @@
+﻿@model LivestockMarketplaceApp.Models.User
+
+@{
+    ViewData["Title"] = "الإعدادات والملف الشخصي";
+}
+
+<div class="container mt-5 mb-5" dir="rtl" style="text-align: right;">
+    <div class="row g-4">
+
+        <div class="col-lg-4 col-md-5">
+            <div class="card border-0 shadow-sm text-center p-4 h-100 rounded-4 bg-white">
+
+                @if (Model != null)
+                {
+                    <div class="position-relative d-inline-block mx-auto mb-3 mt-2">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 110px; height: 110px;">
+                            <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
+                        </div>
+                    </div>
+
+                    <h4 class="fw-bolder text-dark mb-1">@Model.FullName</h4>
+                    <p class="text-muted small mb-4">@Model.Email</p>
+
+                    <hr class="mb-4" style="opacity: 0.1;">
+
+                    <div class="d-grid gap-3 mt-auto">
+                        <a asp-controller="Settings" asp-action="EditProfile" class="btn btn-outline-primary rounded-pill fw-bold py-2 border-2">
+                            <i class="bi bi-pencil-square me-1"></i> تعديل الملف الشخصي
+                        </a>
+                        <a asp-controller="Settings" asp-action="Logout" class="btn btn-danger-soft rounded-pill fw-bold py-2 border-0">
+                            <i class="bi bi-box-arrow-right me-1"></i> تسجيل الخروج
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 py-4">
+                        <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 90px; height: 90px;">
+                            <i class="bi bi-person-x fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">أنت تتصفح كضيف</h5>
+                        <p class="text-muted small mb-4">سجل دخولك لتتمكن من إضافة إعلانات وحفظ المفضلة ومتابعة طلباتك.</p>
+
+                        <div class="d-grid gap-2 w-100 mt-auto">
+                            <a asp-action="Login" class="btn btn-primary rounded-pill fw-bold py-2">تسجيل الدخول</a>
+                            <a asp-action="Register" class="btn btn-outline-secondary rounded-pill fw-bold py-2">حساب جديد</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-7">
+            <div class="mb-4 d-flex align-items-center border-bottom pb-3">
+                <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center ms-3 shadow-sm" style="width: 45px; height: 45px;">
+                    <i class="bi bi-speedometer2 fs-5"></i>
+                </div>
+                <h3 class="fw-bolder mb-0 text-dark">لوحة التحكم</h3>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <a asp-controller="Settings" asp-action="MyListings" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm p-4 hover-premium rounded-4 bg-white">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box-premium bg-primary bg-opacity-10 text-primary rounded-4 d-flex align-items-center justify-content-center ms-3">
+                                    <i class="bi bi-list-ul fs-2"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold text-dark">إعلاناتي</h5>
+                                    <p class="mb-0 text-muted small">لديك @(Model?.Listings?.Count ?? 0) إعلان نشط</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-controller="Favorites" asp-action="Index" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm p-4 hover-premium rounded-4 bg-white">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box-premium bg-warning bg-opacity-10 text-warning rounded-4 d-flex align-items-center justify-content-center ms-3">
+                                    <i class="bi bi-heart-fill fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold text-dark">المفضلة</h5>
+                                    <p class="mb-0 text-muted small">@(Model?.Favorites?.Count ?? 0) إعلان محفوظ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-controller="Transport" asp-action="MyOrders" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm p-4 hover-premium rounded-4 bg-white">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box-premium bg-success bg-opacity-10 text-success rounded-4 d-flex align-items-center justify-content-center ms-3">
+                                    <i class="bi bi-cart-check-fill fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold text-dark">طلباتي ومشترياتي</h5>
+                                    <p class="mb-0 text-muted small">متابعة حالة مشترياتك</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6">
+                    <a asp-controller="Transport" asp-action="IncomingOrders" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm p-4 hover-premium rounded-4 bg-white">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box-premium bg-info bg-opacity-10 text-info rounded-4 d-flex align-items-center justify-content-center ms-3">
+                                    <i class="bi bi-inbox-fill fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold text-dark">الطلبات الواردة</h5>
+                                    <p class="mb-0 text-muted small">إدارة طلبات الشراء لإعلاناتك</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* صندوق الأيقونات */
+    .icon-box-premium {
+        width: 65px;
+        height: 65px;
+        transition: all 0.3s ease;
+    }
+
+    /* تأثير التمرير على البطاقات (Hover Effect) */
+    .hover-premium {
+        transition: all 0.3s ease;
+        border: 2px solid transparent !important;
+    }
+
+        .hover-premium:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+            border-color: #f1f5f9 !important;
+        }
+
+            .hover-premium:hover .icon-box-premium {
+                transform: scale(1.1);
+            }
+
+    /* زر تسجيل الخروج الناعم */
+    .btn-danger-soft {
+        background-color: #fef2f2;
+        color: #ef4444;
+        transition: all 0.3s ease;
+    }
+
+        .btn-danger-soft:hover {
+            background-color: #fee2e2;
+            color: #dc2626;
+            transform: translateY(-2px);
+        }
+</style>

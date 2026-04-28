@@ -1,0 +1,251 @@
+﻿@model LivestockMarketplaceApp.Models.User
+
+@{
+    ViewData["Title"] = "إنشاء حساب جديد - سوق الحلال";
+    // Layout = null;
+}
+
+<div class="container-fluid login-page-container p-0" dir="rtl">
+    <div class="row g-0 h-100 align-items-center">
+
+        <div class="col-lg-5 col-md-12 d-flex align-items-center justify-content-center h-100 bg-white shadow-lg p-3 p-md-4 form-scroll-area">
+            <div class="login-form-wrapper w-100 text-end" style="max-width: 550px;">
+
+                <div class="text-center d-lg-none mb-3">
+                    <a class="login-brand fs-2 fw-bolder text-decoration-none text-dark" asp-controller="Listings" asp-action="Index">
+                        <i class="bi bi-shop text-success"></i> سوق الحلال
+                    </a>
+                </div>
+
+                <div class="mb-4 border-bottom pb-3 text-end">
+                    <h1 class="h3 fw-bolder text-dark mb-2">إنشاء حساب جديد</h1>
+                    <p class="text-muted small mb-0">قم بتعبئة بياناتك لتصبح جزءاً من مجتمع سوق الحلال.</p>
+                </div>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger p-2 rounded-3 mb-3 border-0 shadow-sm small" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-1 ms-1"></i> @ViewBag.Error
+                    </div>
+                }
+
+                <div asp-validation-summary="All" class="text-danger fw-bold mb-2 list-unstyled small"></div>
+
+                <form asp-controller="Settings" asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6 form-group position-relative text-end">
+                            <label class="form-label fw-bold text-dark mb-1 small">الاسم الكامل <span class="text-danger">*</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-person input-icon text-muted"></i>
+                                <input asp-for="FullName" class="form-control premium-input rtl-input" placeholder="الاسم كامل..." required>
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger small" style="font-size: 0.75rem;"></span>
+                        </div>
+
+                        <div class="col-md-6 form-group position-relative text-end">
+                            <label class="form-label fw-bold text-dark mb-1 small">رقم الجوال <span class="text-danger">*</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-phone input-icon text-muted"></i>
+                                <input asp-for="PhoneNumber" class="form-control premium-input ltr-input" placeholder="05XXXXXXXX" required>
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small" style="font-size: 0.75rem;"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3 position-relative text-end">
+                        <label class="form-label fw-bold text-dark mb-1 small">البريد الإلكتروني <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-envelope input-icon text-muted"></i>
+                            <input asp-for="Email" type="email" class="form-control premium-input ltr-input" placeholder="example@mail.com" required>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small" style="font-size: 0.75rem;"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6 form-group position-relative text-end">
+                            <label class="form-label fw-bold text-dark mb-1 small">المدينة <span class="text-muted fw-normal" style="font-size: 0.7rem;">(اختياري)</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-geo-alt input-icon text-muted"></i>
+                                <input asp-for="City" class="form-control premium-input rtl-input" placeholder="المدينة...">
+                            </div>
+                            <span asp-validation-for="City" class="text-danger small" style="font-size: 0.75rem;"></span>
+                        </div>
+
+                        <div class="col-md-6 form-group position-relative text-end">
+                            <label class="form-label fw-bold text-dark mb-1 small">تاريخ الميلاد <span class="text-muted fw-normal" style="font-size: 0.7rem;">(اختياري)</span></label>
+                            <div class="input-group-custom">
+                                <i class="bi bi-calendar3 input-icon text-muted"></i>
+                                <input asp-for="BirthDate" type="date" class="form-control premium-input rtl-input" style="font-size: 0.85rem;">
+                            </div>
+                            <span asp-validation-for="BirthDate" class="text-danger small" style="font-size: 0.75rem;"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4 position-relative text-end">
+                        <label class="form-label fw-bold text-dark mb-1 small">كلمة المرور <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="bi bi-lock input-icon text-muted"></i>
+                            <input asp-for="Password" type="password" class="form-control premium-input ltr-input" placeholder="••••••••" required>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small" style="font-size: 0.75rem;"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <button type="submit" class="btn btn-login-premium w-100 rounded-pill fw-bold">
+                            <i class="bi bi-person-plus me-2"></i> إنشاء الحساب
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3 pt-3 border-top">
+                        <p class="text-muted small mb-0">
+                            لديك حساب بالفعل؟
+                            <a asp-action="Login" class="text-decoration-none fw-bold ms-1" style="color: #D4AF37;">
+                                تسجيل الدخول
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-7 d-none d-lg-block h-100 login-bg-section position-relative">
+            <div class="login-bg-overlay"></div>
+            <div class="login-brand-content text-center p-5 z-2 position-relative d-flex flex-column h-100 justify-content-center">
+                <a class="login-brand fs-1 fw-bolder text-decoration-none mb-4" asp-controller="Listings" asp-action="Index">
+                    <i class="bi bi-shop text-success fs-1"></i> سوق الحلال
+                </a>
+                <h2 class="text-light fw-bold mb-3 h1">مجتمع متكامل لتجار المواشي</h2>
+                <p class="text-light fs-5 opacity-75">سجل الآن مجاناً وكن جزءاً من أكبر منصة لبيع وشراء الحلال.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .login-page-container {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* إضافة سكرول للجهة اليمنى فقط إذا كانت الشاشة صغيرة جداً */
+    .form-scroll-area {
+        overflow-y: auto;
+        max-height: 100vh;
+    }
+
+        .form-scroll-area::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+    .login-bg-section {
+        background-color: #0f172a;
+        /* background-image: url('/images/register-bg.jpg'); */
+        background-size: cover;
+        background-position: center;
+    }
+
+    .login-bg-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.95) 100%);
+        z-index: 1;
+    }
+
+    .login-brand {
+        color: #fff !important;
+        font-weight: 800;
+        font-size: 32px;
+    }
+
+    .input-group-custom {
+        position: relative;
+    }
+
+    /* الأيقونات على اليسار مع تصغير حجمها قليلاً */
+    .input-icon {
+        position: absolute;
+        left: 15px !important;
+        right: auto !important;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        z-index: 10;
+        color: #94a3b8;
+        transition: color 0.3s ease;
+    }
+
+    /* تصغير الحشوة (Padding) لتقليل الارتفاع العام */
+    .premium-input {
+        border-radius: 50px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        padding-right: 15px !important;
+        padding-left: 45px !important;
+        border: 2px solid #e2e8f0;
+        background-color: #f8fafc;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .rtl-input {
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
+    .ltr-input {
+        text-align: left !important;
+        direction: ltr !important;
+    }
+
+        .ltr-input::placeholder {
+            text-align: left !important;
+            direction: ltr !important;
+        }
+
+    input[type="password"].ltr-input {
+        letter-spacing: 2px;
+    }
+
+    .premium-input:focus {
+        border-color: #D4AF37;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
+        color: #1e293b;
+        outline: none;
+    }
+
+        .premium-input:focus + .input-icon {
+            color: #D4AF37 !important;
+        }
+
+    /* تصغير زر التسجيل قليلاً */
+    .btn-login-premium {
+        background: linear-gradient(135deg, #D4AF37, #f1c40f);
+        color: white !important;
+        border: none;
+        box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+        padding: 10px 20px !important;
+        font-size: 1rem;
+    }
+
+        .btn-login-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #f1c40f, #D4AF37);
+        }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

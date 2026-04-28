@@ -1,0 +1,39 @@
+﻿@model IEnumerable<LivestockMarketplaceApp.Models.TransportRequest>
+
+@{
+    ViewData["Title"] = "طلبات التوصيل المتاحة";
+}
+
+<div class="container mt-5" dir="rtl" style="text-align: right;">
+    <h2 class="fw-bold mb-4"><i class="bi bi-truck text-warning"></i> طلبات التوصيل المتاحة</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">لا توجد طلبات توصيل متاحة حالياً.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var request in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">توصيل إعلان: @request.Listing.Title</h5>
+                            <hr />
+                            <p class="mb-1"><i class="bi bi-geo-alt text-secondary"></i> <strong>العنوان:</strong> @request.DeliveryAddress</p>
+                            <p class="mb-3"><i class="bi bi-cash text-success"></i> <strong>أجرة التوصيل:</strong> @request.TransportFee.ToString("N0") ريال</p>
+
+                            <form asp-controller="Transport" asp-action="AcceptRequest" method="post">
+                                <input type="hidden" name="id" value="@request.Id" />
+                                <button type="submit" class="btn btn-success w-100 fw-bold rounded-pill">
+                                    <i class="bi bi-check-circle"></i> قبول الطلب
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

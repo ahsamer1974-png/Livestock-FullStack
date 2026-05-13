@@ -1,4 +1,5 @@
 ﻿using LivestockMarketplaceApp.Models;
+using LivestockMarketplaceAppMVC.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LivestockMarketplaceApp.Data
@@ -18,6 +19,7 @@ namespace LivestockMarketplaceApp.Data
         public DbSet<Review> Reviews { get; set; }    // لتقييم البائعين
         public DbSet<Message> Messages { get; set; }  // للمحادثات بين المستخدمين
         public DbSet<TransportRequest> TransportRequests { get; set; }
+        public DbSet<Driver> Drivers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
